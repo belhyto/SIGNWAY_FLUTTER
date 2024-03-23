@@ -1,5 +1,5 @@
-name: signway_ai
-description: "Educational platform to learn Indian Sign Language"
+name: signway_3
+description: "A new Flutter project to learn sign language"
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
@@ -19,7 +19,7 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 version: 1.0.0+1
 
 environment:
-  sdk: '>=3.3.2 <4.0.0'
+  sdk: '>=3.3.0 <4.0.0'
 
 # Dependencies specify other packages that your package needs in order to work.
 # To automatically upgrade your package dependencies to the latest versions
@@ -28,8 +28,16 @@ environment:
 # the latest version available on pub.dev. To see which dependencies have newer
 # versions available, run `flutter pub outdated`.
 dependencies:
+
   flutter:
     sdk: flutter
+  tflite_flutter: ^0.9.0
+  tflite_flutter_helper: ^0.2.1
+  camera: ^0.10.5+9
+  shared_preferences: ^2.0.8
+
+
+
 
 
   # The following adds the Cupertino Icons font to your application.
@@ -39,6 +47,9 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
+
+
+
 
   # The "flutter_lints" package below contains a set of recommended lints to
   # encourage good coding practices. The lint set provided by the package is
@@ -53,10 +64,90 @@ dev_dependencies:
 # The following section is specific to Flutter packages.
 flutter:
 
+
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
   # the material Icons class.
+  fonts:
+    - family: Moderna
+      fonts:
+        - asset: fonts/MODERNA_.TTF
+    - family: Montserrat
+      fonts:
+        - asset: fonts/Montserrat-Regular.ttf
+
   uses-material-design: true
+  assets:
+    - assets/sign_a.gif
+    - assets/sign-b.gif
+    - assets/sign-c.gif
+    - assets/sign-d.gif
+    - assets/sign-e.gif
+    - assets/sign-f.gif
+    - assets/sign-g.gif
+    - assets/sign-h.gif
+    - assets/sign-i.gif
+    - assets/sign-j.gif
+    - assets/sign-k.gif
+    - assets/sign-l.gif
+    - assets/sign-m.gif
+    - assets/sign-n.gif
+    - assets/sign-o.gif
+    - assets/sign-p.gif
+    - assets/sign-q.gif
+    - assets/sign-r.gif
+    - assets/sign-s.gif
+    - assets/sign-t.gif
+    - assets/sign-u.gif
+    - assets/sign-v.gif
+    - assets/sign-w.gif
+    - assets/sign-x.gif
+    - assets/sign-y.gif
+    - assets/sign-z.gif
+    - assets/sign_1.gif
+    - assets/sign_2.gif
+    - assets/sign_3.gif
+    - assets/sign_4.gif
+    - assets/sign_5.gif
+    - assets/sign_6.gif
+    - assets/sign_7.gif
+    - assets/sign_8.gif
+    - assets/sign_9.gif
+    - assets/sign_10.gif
+    - assets/sign_bye.gif
+    - assets/sign_deaf.gif
+    - assets/sign_he.gif
+    - assets/sign_india.gif
+    - assets/sign_hello.gif
+    - assets/sign_help.gif
+    - assets/sign_man.gif
+    - assets/sign_me.gif
+    - assets/sign_she.gif
+    - assets/sign_thankyou.gif
+    - assets/sign_welcome.gif
+    - assets/sign_woman.gif
+    - assets/sign_you.gif
+    - assets/BG_1.png
+    - assets/image1.jpg
+    - assets/image2.jpg
+    - assets/image3.jpg
+    - assets/girl1.png
+    - assets/girl3.png
+    - assets/boy1.png
+    - assets/boy2.png
+    - assets/SignwayLogo4.png
+    - assets/ic1.png
+    - assets/ic2.png
+    - assets/ic3.png
+    - assets/bg5.png
+    - assets/bo2.png
+    - assets/girl4.png
+    - assets/trophy.png
+    - assets/close.png
+
+
+
+
 
   # To add assets to your application, add an assets section, like this:
   # assets:
