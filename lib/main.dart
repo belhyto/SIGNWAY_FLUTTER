@@ -99,7 +99,7 @@ class GreetingScreen extends StatelessWidget {
               ),
               const SizedBox(height: 20), // Adjusted spacing
               SizedBox(
-               // Add top padding here
+                // Add top padding here
                 child: ElevatedButton(
                   onPressed: () {
                     // Navigate to the next screen
@@ -691,12 +691,12 @@ class _SignVideoScreenState2 extends State<SignVideoScreen2> {
           children: [
             Expanded(
               child: PageView(
-                controller: _pageController,
-                onPageChanged: (index) {
-                  setState(() {
-                    _currentPage = index;
-                  });
-                },
+                  controller: _pageController,
+                  onPageChanged: (index) {
+                    setState(() {
+                      _currentPage = index;
+                    });
+                  },
                   children: [
                     _buildSignLanguageScreen('Greetings', 'sign_a.gif', 'A', progressValue: 1 / 26),
                     _buildSignLanguageScreen('Challenges', 'sign-b.gif', 'B', progressValue: 2 / 26),
@@ -1088,7 +1088,7 @@ class DeafCommunityApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Deaf Community App',
+      title: 'Sign Community App',
       theme: ThemeData(
         primarySwatch: Colors.blue,
         visualDensity: VisualDensity.adaptivePlatformDensity,
@@ -1111,6 +1111,7 @@ class _HomePageState extends State<HomePage> {
       username: 'ASL_Adventurer',
       content: 'Hello, everyone! I`m looking for a quick gig in data entry. Does anyone have any contacts?',
       imageUrl: '',
+      linkUrl:"https://www.youtube.com/@PragyaGupta",
       likes: 4,
       shares: 6,
       timestamp: DateTime.now(),
@@ -1119,6 +1120,7 @@ class _HomePageState extends State<HomePage> {
       username: 'sillyBilly',
       content: 'Just finished another Hitman mission, feeling good! #GamingSunday',
       imageUrl: 'assets/image1.jpg',
+      linkUrl:"https://www.youtube.com/@PragyaGupta",
       likes: 11,
       shares: 2,
       timestamp: DateTime.now(),
@@ -1127,24 +1129,27 @@ class _HomePageState extends State<HomePage> {
       username: 'Belhyto',
       content: 'How do you like my new digital painting? :D',
       imageUrl: 'assets/image3.jpeg',
+      linkUrl:"https://www.youtube.com/@PragyaGupta",
       likes: 15,
       shares: 4,
       timestamp: DateTime.now(),
     ),
     Post(
       username: 'TechTeamAnnie',
-      content: 'Hello Signway community! We are a budding pharmatech start-up based in Mumbai, focusing on healthcare research. We are #LookingToHire! Email us at apply@medisync.in',
+      content: 'Hello Signway community! We are a budding pharmatech start-up based in Mumbai, focusing on healthcare research. We are #LookingToHire! Email us now!',
       imageUrl: '',
+      linkUrl:"apply@medisync.in",
       likes: 21,
       shares: 9,
       timestamp: DateTime.now(),
     ),
     Post(
       username: 'frunrun',
-      content: 'i am planning to go to the k-town festival, does anyone know if there will be interpreters there?',
-      imageUrl:'assets/image2.jpeg',
+      content: 'Deaf community should definately check these channels out!',
+      imageUrl:'assets/img1.jpg',
+      linkUrl:"https://www.youtube.com/@PragyaGupta",
       comments: [
-        Comment(username: 'Belhyto', text: 'Yesss there are interpreters at the festival, I booked my tickets as soon as I found out :P'),
+        Comment(username: 'Belhyto', text: 'Yes'),
       ],
       likes: 7,
       shares: 1,
@@ -1160,7 +1165,7 @@ class _HomePageState extends State<HomePage> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Deaf Community'),
+        title: const Text('ISL Community'),
       ),
       body: CommunityPosts(
         posts: posts,
@@ -1210,6 +1215,7 @@ class Post {
   final String username;
   final String content;
   final String imageUrl;
+  final String linkUrl; // Add this field for the link URL
   final DateTime timestamp;
   List<Comment> comments;
   int likes;
@@ -1219,12 +1225,14 @@ class Post {
     required this.username,
     required this.content,
     required this.imageUrl,
+    required this.linkUrl,
     required this.timestamp,
     this.comments = const [],
     this.likes = 0,
     this.shares = 0,
   });
 }
+
 
 class Comment {
   final String username;
@@ -1236,7 +1244,7 @@ class Comment {
 class PostItem extends StatefulWidget {
   final Post post;
 
-  const PostItem({super.key, required this.post});
+  const PostItem({Key? key, required this.post}) : super(key: key);
 
   @override
   _PostItemState createState() => _PostItemState();
@@ -1257,6 +1265,14 @@ class _PostItemState extends State<PostItem> {
           ),
           if (widget.post.imageUrl.isNotEmpty)
             Image.asset(widget.post.imageUrl),
+          if (widget.post.linkUrl.isNotEmpty) // Display link if not empty
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Text(
+                'Link: ${widget.post.linkUrl}',
+                style: TextStyle(color: Colors.blue),
+              ),
+            ),
           Column(
             children: widget.post.comments.map((comment) {
               return Container(
@@ -1316,6 +1332,7 @@ class _PostItemState extends State<PostItem> {
   }
 }
 
+
 class CommentInputField extends StatefulWidget {
   final Post post;
 
@@ -1358,6 +1375,8 @@ class PostPage extends StatelessWidget {
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _bodyController = TextEditingController();
   final TextEditingController _imageUrlController = TextEditingController();
+  final TextEditingController _linkUrlController = TextEditingController();
+
 
   @override
   Widget build(BuildContext context) {
@@ -1398,6 +1417,14 @@ class PostPage extends StatelessWidget {
               ),
               style: const TextStyle(fontFamily:'Montserrat', fontSize: 18.0),
             ),
+            TextField(
+              controller: _linkUrlController,
+              decoration: const InputDecoration(
+                labelText: 'Image URL (optional)',
+                border: OutlineInputBorder(),
+              ),
+              style: const TextStyle(fontFamily:'Montserrat', fontSize: 18.0),
+            ),
             const SizedBox(height: 16.0),
             Expanded(
               child: ElevatedButton(
@@ -1406,6 +1433,7 @@ class PostPage extends StatelessWidget {
                     username: _usernameController.text,
                     content: _bodyController.text,
                     imageUrl: _imageUrlController.text,
+                    linkUrl: _linkUrlController.text,
                     timestamp: DateTime.now(),
                     likes: 0,
                     shares: 0,
@@ -1414,6 +1442,7 @@ class PostPage extends StatelessWidget {
                   _usernameController.clear();
                   _bodyController.clear();
                   _imageUrlController.clear();
+                  _linkUrlController.clear();
                   Navigator.pop(context);
                 },
                 child: const Padding(

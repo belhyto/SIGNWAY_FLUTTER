@@ -35,6 +35,7 @@ dependencies:
   tflite_flutter_helper: ^0.2.1
   camera: ^0.10.5+9
   shared_preferences: ^2.0.8
+  http: ^1.2.1
 
 
 
@@ -144,6 +145,12 @@ flutter:
     - assets/girl4.png
     - assets/trophy.png
     - assets/close.png
+    - assets/keypoint_classifier.tflite
+    - assets/img1.jpg
+
+
+
+
 
 
 

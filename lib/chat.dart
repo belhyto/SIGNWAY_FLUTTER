@@ -12,10 +12,10 @@ class SplashScreen3 extends StatefulWidget {
   const SplashScreen3({super.key});
 
   @override
-  _SplashScreenState2 createState() => _SplashScreenState2();
+  _SplashScreenState3 createState() => _SplashScreenState3();
 }
 
-class _SplashScreenState2 extends State<SplashScreen3> with SingleTickerProviderStateMixin {
+class _SplashScreenState3 extends State<SplashScreen3> with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> _animation;
 
@@ -58,7 +58,7 @@ class _SplashScreenState2 extends State<SplashScreen3> with SingleTickerProvider
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             const Text(
-              "Play Now!",
+              "Chat Now!",
               style: TextStyle(fontFamily:'Moderna', fontSize: 40),
             ),
             const SizedBox(height: 20),
@@ -106,15 +106,24 @@ class _ChatScreenState extends State<ChatScreen> {
       text: text,
       isUser: true,
     );
+    List<String> suggestedWords = generateSuggestedWords(text);
     ChatMessage botMessage = ChatMessage(
-      text: "Processing \"$text\"...",
+      text: "Did you mean any of these?",
       isUser: false,
+      suggestedWords: suggestedWords,
     );
     setState(() {
       _messages.insert(0, userMessage);
       _messages.insert(0, botMessage);
     });
     // You can add logic here to handle the user input, like sending it to a chatbot API
+  }
+
+  List<String> generateSuggestedWords(String word) {
+    // Here you can implement your logic to generate suggested words based on the input word
+    // For simplicity, I'm providing some example words
+    List<String> exampleWords = ['apples', 'bananas', 'oranges'];
+    return exampleWords;
   }
 
   @override
@@ -175,46 +184,70 @@ class _ChatScreenState extends State<ChatScreen> {
 class ChatMessage extends StatelessWidget {
   final String text;
   final bool isUser;
+  final List<String>? suggestedWords;
 
-  ChatMessage({required this.text, required this.isUser});
+  ChatMessage({required this.text, required this.isUser, this.suggestedWords});
 
   @override
   Widget build(BuildContext context) {
     return Container(
       margin: EdgeInsets.symmetric(vertical: 10.0),
-      child: Row(
-        mainAxisAlignment: isUser ? MainAxisAlignment.end : MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.start,
+      child: Column(
+        crossAxisAlignment: isUser ? CrossAxisAlignment.end : CrossAxisAlignment.start,
         children: <Widget>[
-          isUser
-              ? Container() // Bot avatar can be added here
-              : Container(
-            margin: const EdgeInsets.only(right: 16.0),
-            child: CircleAvatar(
-              child: Text('Bot'),
-            ),
-          ),
-          Expanded(
-            child: Container(
-              padding: EdgeInsets.all(10.0),
-              decoration: BoxDecoration(
-                color: isUser ? Colors.blueAccent : Colors.grey[300],
-                borderRadius: BorderRadius.circular(8.0),
+          Row(
+            mainAxisAlignment: isUser ? MainAxisAlignment.end : MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              if (!isUser)
+                Container(
+                  margin: const EdgeInsets.only(right: 16.0),
+                  child: CircleAvatar(
+                    child: Text('Bot'),
+                  ),
+                ),
+              Expanded(
+                child: Container(
+                  padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 10.0),
+                  decoration: BoxDecoration(
+                    color: isUser ? Colors.blue : Colors.grey[300],
+                    borderRadius: BorderRadius.only(
+                      topLeft: isUser ? Radius.circular(20.0) : Radius.circular(0.0),
+                      topRight: isUser ? Radius.circular(0.0) : Radius.circular(20.0),
+                      bottomLeft: Radius.circular(20.0),
+                      bottomRight: Radius.circular(20.0),
+                    ),
+                  ),
+                  child: Text(
+                    text,
+                    style: TextStyle(color: isUser ? Colors.white : Colors.black),
+                  ),
+                ),
               ),
-              child: Text(
-                text,
-                style: TextStyle(color: isUser ? Colors.white : Colors.black),
+            ],
+          ),
+          if (!isUser && suggestedWords != null)
+            Container(
+              margin: EdgeInsets.only(top: 5.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: suggestedWords!.map((word) {
+                  return Container(
+                    margin: EdgeInsets.only(top: 5.0, left: 5.0),
+                    child: ElevatedButton(
+                      onPressed: () {
+                        // Handle button press
+                        print('User selected: $word');
+                      },
+                      child: Text(word),
+                      style: ElevatedButton.styleFrom(
+                        padding: EdgeInsets.symmetric(horizontal: 10.0),
+                      ),
+                    ),
+                  );
+                }).toList(),
               ),
             ),
-          ),
-          isUser
-              ? Container(
-            margin: const EdgeInsets.only(left: 16.0),
-            child: CircleAvatar(
-              child: Text('You'),
-            ),
-          )
-              : Container(), // Bot avatar can be added here
         ],
       ),
     );

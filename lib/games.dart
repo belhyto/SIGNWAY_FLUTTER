@@ -3,6 +3,9 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:camera/camera.dart';
 import 'package:tflite_flutter/tflite_flutter.dart';
+import 'main.dart';
+
+import 'hand.dart';
 
 
 void main() {
@@ -93,9 +96,11 @@ enum DetectionClasses { a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p }
 
 class Classifier {
   late Interpreter _interpreter;
-
-  static const String modelFile = "converted_model.tflite";
-
+  static const String modelFile = "keypoint_classifier.tflite";
+  static const List<String> labels = [
+    'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J',
+    'K', 'L', 'M', 'N', 'O', 'P'
+  ];
   Future<void> loadModel({Interpreter? interpreter}) async {
     try {
       _interpreter = interpreter ??
@@ -136,8 +141,27 @@ class _GestureGameScreenState extends State<GestureGameScreen> {
 
   Future<void> initialize() async {
     final cameras = await availableCameras();
+
+    // Initialize frontCamera with a default value
+    CameraDescription? frontCamera;
+
+    // Find the front camera
+    for (final camera in cameras) {
+      if (camera.lensDirection == CameraLensDirection.front) {
+        frontCamera = camera;
+        break;
+      }
+    }
+
+    // Check if frontCamera is null
+    if (frontCamera == null) {
+      print('No front camera found');
+      // Handle the case where no front camera is found
+      return;
+    }
+
     cameraController = CameraController(
-      cameras[0],
+      frontCamera,
       ResolutionPreset.medium,
     );
 
@@ -154,66 +178,67 @@ class _GestureGameScreenState extends State<GestureGameScreen> {
   }
 
 
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Gesture Game'),
       ),
-      body: Column(
+      body: Stack(
         children: [
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
+          Column(
             children: [
-              Expanded(
-                child: Image.asset(
-                  'assets/girl4.png', // Replace 'girl1.png' with your image asset path
-                  width: 300, // Adjust the width of the image
-                  height: 300, // Adjust the height of the image
-                  fit: BoxFit.contain, // Maintain aspect ratio
-                ),
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Expanded(
+                    child: Image.asset(
+                      'assets/girl4.png', // Replace 'girl1.png' with your image asset path
+                      width: 300, // Adjust the width of the image
+                      height: 300, // Adjust the height of the image
+                      fit: BoxFit.contain, // Maintain aspect ratio
+                    ),
+                  ),
+                  SizedBox(width: 20), // Add spacing between image and text
+                  Padding(
+                    padding: const EdgeInsets.only(right: 20.0),
+                    child: Text(
+                      'Hello, What is your name?', // Replace with your desired text
+                      style: TextStyle(
+                        fontSize: 15, // Adjust the font size as needed
+                        fontFamily: 'Montserrat', // Adjust the font weight as needed
+                      ),
+                    ),
+                  ),
+                ],
               ),
-              SizedBox(width: 20), // Add spacing between image and text
-              Padding(
-                padding: const EdgeInsets.only(right: 20.0),
-
-                child: Text(
-                  'Hello, What is your name?', // Replace with your desired text
-                  style: TextStyle(
-                    fontSize: 15, // Adjust the font size as needed
-                      fontFamily:'Montserrat', // Adjust the font weight as needed
+              if (initialized)
+                Expanded(
+                  child: Center(
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(20.0),
+                      child: Container(
+                        width: 150 * 2, // Adjust the width of the camera preview (maintain aspect ratio)
+                        height: 200 * 2, // Adjust the height of the camera preview
+                        child: AspectRatio(
+                          aspectRatio: cameraController.value.aspectRatio,
+                          child: CameraPreview(cameraController),
+                        ),
+                      ),
+                    ),
                   ),
                 ),
-              ),
-
+              if (!initialized)
+                Expanded(
+                  child: Center(
+                    child: CircularProgressIndicator(),
+                  ),
+                ),
             ],
           ),
 
-          if (initialized)
-            Positioned.fill(
-              top:200,
-              // Adjust the top position to fit your layout
-              child: Center(
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(20.0),
-                child: Container(
-                  width: 150 * 2, // Adjust the width of the camera preview (maintain aspect ratio)
-                  height: 200 * 2,  // Adjust the height of the camera preview
-                  child: AspectRatio(
-                    aspectRatio: cameraController.value.aspectRatio,
-                    child: CameraPreview(cameraController),
-                  ),
-              ),
-            ),
-            ),
-            ),
-          if (!initialized)
-            Positioned.fill(
-              top: 300, // Adjust the top position to fit your layout
-              child: Center(
-                child: CircularProgressIndicator(),
-              ),
-            ),
         ],
       ),
     );
@@ -233,9 +258,6 @@ class _GestureGameScreenState extends State<GestureGameScreen> {
       // Implement your image processing logic using the Classifier class
       final interpreter = classifier.interpreter;
 
-      // Perform inference on the image
-      // Example:
-      // interpreter.run(image.buffer, ...);
 
     } finally {
       setState(() {
